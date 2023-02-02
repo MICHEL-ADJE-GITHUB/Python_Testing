@@ -1,49 +1,72 @@
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Summary | GUDLFT Registration</title>
-</head>
-<body>
-        <h2>Welcome, {{club['email']}} </h2><a href="{{url_for('logout')}}">Logout</a>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
 
+    <link rel="stylesheet" href="{{ url_for('static', filename='style2.css') }}">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.14.0/css/all.css"
+        integrity="sha384-HzLeBuhoNPvSl5KYnjx0BT+WB0QEEqLprO+NBkkk5gbc67FTaL7XIGa2w1L0Xbgc" crossorigin="anonymous">
+
+</head>
+
+<body>
+    <header class="log-logout d-flex justify-content-between align-items-center mr-3">
+        <div class="log login-info">
+            <h2>Welcome, {{club['email']}}</h2>
+            <h5>Points disponibles: {{club['points']}}</h5>
+        </div>
+        <div class="log logout-icon">
+            <a href="{{url_for('logout')}}"><i class="fas fa-lg fa-sign-out-alt" title="Se deconnecter"></i></a>
+        </div>
+    </header>
     <H3 style="color: red;">{% with messages = get_flashed_messages()%}</H3>
     {% if messages %}
-        <ul>
-       {% for message in messages %}
-            <li>{{message}}</li>
-        {% endfor %}
-       </ul>
-    {% endif%}
-    Points disponibles: {{club['points']}}
-    <h3>Competitions:</h3>
     <ul>
-        {% for comp in competitions%}
-        <li>
-            {{comp['name']}}<br />
-            Date: {{comp['date']}}</br>
-            Nombre de places restantes : {{comp['numberOfPlaces']}}
-            {%if comp['numberOfPlaces']|int >0%}
-            <a href="{{ url_for('book',competition=comp['name'],club=club['name']) }}">Book Places</a>
-            {% else %}
-            <div style="color: green;">SOLD OUT</div>
-            {%endif%}
-        </li>
-        <hr />
+        {% for message in messages %}
+        <li>{{message}}</li>
         {% endfor %}
     </ul>
-    <h3>Competitions terminées:</h3>
-    <ul>
-        {% for comp in competition_done%}
-        <li>
-            {{comp['name']}}<br />
-            Date: {{comp['date']}}</br>
-            Nombre de places : {{comp['numberOfPlaces']}}
-        </li>
-        <hr />
+    {% endif%}
+    <div class="Competitions-block mt-5">
+        <h3>Competitions:</h3>
+        {% for comp in competitions%}
+        <div class="card mr-3 mb-3" id="card">
+            <img src="../images/stade_bg.png" class="card-img-top" alt="...">
+            <div class="card-body">
+                <h5 class="card-title">{{comp['name']}}</h5>
+                <h6 class="card-text">{{comp['date']}}</h6>
+                <h6 class="card-text"> Nombre de places restantes : {{comp['numberOfPlaces']}}</h6>
+                {%if comp['numberOfPlaces']|int >0%}
+                <a href="{{ url_for('book',competition=comp['name'],club=club['name']) }}"
+                    class="btn btn-primary">Reserver
+                    Place</a>
+                {% else %}
+                <button type="button" class="btn btn-success " disabled>Sold Out</button>
+                {%endif%}
+            </div>
+        </div>
         {% endfor %}
+    </div>
+    <div class="competion-done-block mt-3">
+        <h3>Competitions terminées:</h3>
+        {% for comp in competition_done%}
+        <div class="card mr-3 mb-3" id="card">
+            <img src="{{ url_for('images', filename='stade_bg.png') }}" class="card-img-top" alt="...">
+            <div class="card-body">
+                <h5 class="card-title">{{comp['name']}}</h5>
+                <h6 class="card-text">{{comp['date']}}</h6>
+                <h6 class="card-text"> Nombre de places : {{comp['numberOfPlaces']}}</h6>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
     </ul>
     {%endwith%}
 
 </body>
+
 </html>

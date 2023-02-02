@@ -1,6 +1,6 @@
 import datetime
 import json
-from flask import Flask,render_template,request,redirect,flash,url_for
+from flask import Flask,render_template,request,redirect,flash,url_for, send_from_directory
 
 
 def loadClubs():
@@ -91,6 +91,9 @@ def purchasePlaces():
     return render_template('welcome.html', club=club, competitions=competitions_with_valid_date, competition_done=competitions_done)
 
 
+@app.route('/images/<path:filename>')
+def images(filename):
+    return send_from_directory('images/', filename)
 
 # TODO: Add route for points display
 

@@ -1,0 +1,22 @@
+body {
+  background: linear-gradient(to right, #a32408, #f8522d);
+  color: white;
+}
+
+table td {
+  border: 1px solid white;
+  padding: 15px;
+}
+
+table th {
+  order: 1px solid white;
+  padding: 18px;
+}
+
+.caption {
+  font-weight: 500;
+}
+
+header h1 {
+  text-decoration: underline;
+}

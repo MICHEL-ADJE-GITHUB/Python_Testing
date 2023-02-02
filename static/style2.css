@@ -1,0 +1,30 @@
+body {
+    background: linear-gradient(to right, #a32408, #f8522d);
+    margin-left: 10;
+}
+span,h2 ,h3,h5 ,i {
+    color: white;
+}
+h6{
+    font-weight: normal;
+}
+
+#card{
+    width: 20rem;
+    display: inline-block;
+}
+#sold-out{
+    color: green;
+    font-weight: 500;
+    
+}
+.log{
+    display: inline-block;
+}
+.log-logout{
+    margin-right: 20;
+}
+header h1{
+    color: white;
+    text-decoration: underline;
+}
