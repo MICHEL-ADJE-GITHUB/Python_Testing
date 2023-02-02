@@ -51,49 +51,57 @@ def showSummary():
 
 @app.route('/book/<competition>/<club>')
 def book(competition,club):
-    foundClub = [c for c in clubs if c['name'] == club][0]
-    foundCompetition = [c for c in competitions if c['name'] == competition][0]
-    if foundClub and foundCompetition:
-        return render_template('booking.html',club=foundClub,competition=foundCompetition)
-    else:
+    try:
+        foundClub = [c for c in clubs if c['name'] == club][0]
+        foundCompetition = [c for c in competitions if c['name'] == competition][0] #<---exception here
+        if foundClub and foundCompetition:
+            return render_template('booking.html',club=foundClub,competition=foundCompetition)
+    except:
         flash("Something went wrong-please try again")
         return render_template('welcome.html', club=club, competitions=competitions)
 
 
 @app.route('/purchasePlaces',methods=['POST'])
 def purchasePlaces():
-    competition = [c for c in competitions if c['name'] == request.form['competition']][0]
-    club = [c for c in clubs if c['name'] == request.form['club']][0]
-    competitions_with_valid_date = []
-    competitions_done = []
+    try:
+        competition = [c for c in competitions if c['name'] == request.form['competition']][0]
+        club = [c for c in clubs if c['name'] == request.form['club']][0]
+        competitions_with_valid_date = []
+        competitions_done = []
 
-    for comp in competitions:
-        date_str = str(comp['date'])
-        date_object = datetime.datetime.strptime(date_str, '%Y-%m-%d %H:%M:%S')
-        if date_object > datetime.datetime.now():
-            comp['date'] = date_object
-            competitions_with_valid_date.append(comp)
+        for comp in competitions:
+            date_str = str(comp['date'])
+            date_object = datetime.datetime.strptime(date_str, '%Y-%m-%d %H:%M:%S')
+            if date_object > datetime.datetime.now():
+                comp['date'] = date_object
+                competitions_with_valid_date.append(comp)
+            else:
+                competitions_done.append(comp)
+
+        places = request.form.get('places')
+
+        if places:
+            placesRequired = int(places)
+            if (placesRequired <= int(competition['numberOfPlaces']) and placesRequired > 0) and (int(club['points'])>0 and (int(club['points']) >= placesRequired and placesRequired < 13)):
+                competition['numberOfPlaces'] = int(competition['numberOfPlaces']) - placesRequired
+                club['points'] = int(club['points']) - placesRequired
+                flash('Felicitation! vous venez de reserver {} places'.format(placesRequired))
+            else:
+                flash('echec lors de la reservation de {} places !'.format(placesRequired))
         else:
-            competitions_done.append(comp)
-
-    places = request.form.get('places')
-
-    if places:
-        placesRequired = int(places)
-        if (placesRequired <= int(competition['numberOfPlaces']) and placesRequired > 0) and (int(club['points'])>0 and (int(club['points']) >= placesRequired and placesRequired < 13)):
-            competition['numberOfPlaces'] = int(competition['numberOfPlaces']) - placesRequired
-            club['points'] = int(club['points']) - placesRequired
-            flash('Felicitation! vous venez de reserver {} places '.format(placesRequired))
-        else:
-            flash('echec lors de la reservation de {} places !'.format(placesRequired))
-    else:
-        flash('Aucune place n\'a été sélectionnée!')
-    return render_template('welcome.html', club=club, competitions=competitions_with_valid_date, competition_done=competitions_done)
+            flash('Aucune place n\'a été sélectionnée!')
+        return render_template('welcome.html', club=club, competitions=competitions_with_valid_date, competition_done=competitions_done)
+    except Exception as e:
+         print(e)
+    
 
 
 @app.route('/images/<path:filename>')
 def images(filename):
-    return send_from_directory('images/', filename)
+    try:
+        return send_from_directory('images/', filename)
+    except Exception as e:
+        print(e)
 
 # TODO: Add route for points display
 
